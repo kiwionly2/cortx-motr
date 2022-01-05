@@ -12,75 +12,81 @@ The prerequisite that is necessary to install the Motr component is mentioned be
 
 - **Ansible** is needed::
 
+    ```sh
     sudo yum install epel-release # Install EPEL yum repo
     sudo yum install ansible
+    ```
 
 Get the Sources
 ===============
 Clone Motr::
-
+    ```sh
     git clone --recursive https://github.com/Seagate/cortx-motr.git
+    ```
 
 Build
 =====
 
 1. Build and install the necessary dependencies::
-
+    ```sh
     cd cortx-motr
     sudo scripts/install-build-deps
-
+    ```
 2. If using lnet as the transport, check the Lustre network interface configuration::
-
+    ```sh
     sudo vi /etc/modprobe.d/lnet.conf
-
+    ```
    Use ``ip a`` command to get a list of network interfaces.
    Then modify ``lnet.conf`` to use one of the listed network interfaces.
    After this run::
-
+    ```sh
     sudo modprobe lnet
     sudo lctl list_nids
-
+    ```
    Make sure that libfabric package is not installed.
    Please refer the following document for un-installation of libfabric package.
    https://seagate-systems.atlassian.net/wiki/spaces/PUB/pages/711230113/Libfabric+setup+and+using+libfabric+with+motr#Uninstalling-libfabric-package ::
-
+    ```sh
     fi_info --version
+     ```
     bash: fi_info: command not found
 
 3. If using libfabric as the transport, check the Libfabric network interface configuration::
-
+    ```sh
     sudo vi /etc/libfab.conf
-
+    ```
    Use ``ip a`` command to get a list of network interfaces.
    Then modify ``libfab.conf`` to use one of the listed network interfaces.
    Verify the libfab.conf file contents::
-
+    ```sh
     cat /etc/libfab.conf
     networks=tcp(eth1)
-
+    ```
    Please refer the below document for installation.
    https://seagate-systems.atlassian.net/wiki/spaces/PUB/pages/711230113/Libfabric+setup+and+using+libfabric+with+motr
 
    Verify that libfabric package is installed::
-
+    ```sh
     fi_info --version
+    ```
+    
     fi_info: 1.11.2
     libfabric: 1.11.2
     libfabric api: 1.11
 
 4. To build Motr, run::
-
+    ```sh
     scripts/m0 make
-
+    ```
    Note: use ``scripts/m0 rebuild`` command to re-build Motr.
  
 RPMs Generation
 ===============
 
 To build RPMs, run::
-
+    ```sh
     make rpms
-
+    ```
 The generated RPMs will be placed at ``$HOME/rpmbuild/RPMS/$(arch)/`` directory.
 
 Running Tests
@@ -89,92 +95,92 @@ Running Tests
 Unit Test
 ---------
 - To run unit tests, use this command::
-
+    ```sh
     sudo scripts/m0 run-ut
-
+    ```
   Note: running Time (approximate) - 20 to 30 minutes
 
 - To list all available unit tests::
-
+    ```sh
     sudo scripts/m0 run-ut -l
-
+    ```
 - To run some specific unit test(s)::
-
+    ```sh
     sudo scripts/m0 run-ut -t libm0-ut,be-ut
-
+    ```
 Kernel Space Unit Test
 ----------------------
 - To run kernel space unit tests, use this command::
-
+    ```sh
     sudo scripts/m0 run-kut
-
+    ```
 System Tests
 ------------
 - To list all available system tests, run the following command::
-
+    ```sh
     sudo scripts/m0 run-st -l
-
+    ```
 - To run Motr sanity test, use the following command::
-
+    ```sh
     sudo scripts/m0 run-st 52motr-singlenode-sanity
-
+    ```
 - To run all system tests::
-
+    ```sh
     sudo scripts/m0 run-st
-
+    ```
   Note: it might take several hours to finish.
   
 Unit Benchmark
 --------------
 - To run unit benchmarks, use the following command::
-
+    ```sh
     sudo scripts/m0 run-ub
-
+    ```
   Running Time (approximate) - 60 to 70 minutes
 
 - To list all available unit benchmarks::
-
+    ```sh
     sudo scripts/m0 run-ub -l
-
+    ```
 - To run some specific unit benchmark(s), e.g. "ad-ub"::
-
+    ```sh
     sudo scripts/m0 run-ub -t ad-ub
-
+    ```
 Troubleshooting
 ===============
 - If pip fails to install a package while installing build dependencies,
   try installing packages using pip installer.
   run the following commands if package is ipaddress::
-
+    ```sh
     sudo pip install ipaddress
     sudo scripts/install-build-deps
-
+    ```
 - If an installation failure occurs due to the dependency of ``pip3`` ,
   run the following commands::
-
+    ```sh
     sudo yum install -y python36-setuptools
     sudo easy_install-3.6 pip
-
+    ```
 - If an installation failure occurs due to ``ply`` dependency,
   run the following command::
-
+    ```sh
     pip3 install ply
-
+    ```
 - If ``lctl list_nids`` does not render an output, do the following:
 
   1. Create the ``lnet.conf`` file, if it does not exist. And make sure
      the interface name is specified correctly there::
-
+       ```sh
        $ cat /etc/modprobe.d/lnet.conf
        options lnet networks=tcp(eth1) config_on_load=1
-
+       ```
      Check the network interfaces in your system with ``ip a`` command.
 
   2. Restart the ``lnet`` service, and check LNet NIDs::
-
+       ```sh
        sudo systemctl restart lnet
        sudo lctl list_nids
-
+       ```
 - For other errors, please check our `FAQs <https://github.com/Seagate/cortx/blob/master/doc/Build-Installation-FAQ.md>`_.
 
 - After following this guide, if you would like to actually run a motr cluster, please follow the `cortx-hare quick start guide <https://github.com/Seagate/cortx-hare/blob/main/README.md>`_.
@@ -183,16 +189,16 @@ Build the documentation
 =======================
 
 To create Motr documentation files, make sure you first install ``latex`` and ``ghostscript``::
-
+    ```sh
     sudo yum install doxygen
     sudo yum install texlive-pdftex texlive-latex-bin texlive-texconfig* texlive-latex* texlive-metafont* texlive-cmap* texlive-ec texlive-fncychap* texlive-pdftex-def texlive-fancyhdr* texlive-titlesec* texlive-multirow texlive-framed* texlive-wrapfig* texlive-parskip* texlive-caption texlive-ifluatex* texlive-collection-fontsrecommended texlive-collection-latexrecommended
     sudo yum install ghostscript
-
+    ```
 
 Then in Motr folder run::
-
+    ```sh
     make doc
-
+    ```
 The files will be generated at doc/html/ folder.
 
 
