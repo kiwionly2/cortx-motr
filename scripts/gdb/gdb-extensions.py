@@ -165,7 +165,8 @@ Total: 2
 
 		print "Total: %d" % total
 
-	def get_head(self, argv):
+	@staticmethod
+	def get_head(argv):
 		ok    = True
 		head  = 0
 		vhead = gdb.parse_and_eval(argv[0])
@@ -185,7 +186,8 @@ Total: 2
 			ok = False
 		return vhead, head, ok
 
-	def get_offset(self, argv):
+	@staticmethod
+	def get_offset(argv):
 		argc     = len(argv)
 		offset   = 0
 		elm_type = None
